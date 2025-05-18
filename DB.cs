@@ -33,8 +33,8 @@ namespace LoginEjemplo
 
                         INSERT INTO Usuarios (NombreUsuario, Contrasena, Tipo)
                         VALUES 
-                            ('admin', 'admin123', 'admin'),
-                            ('socio', 'socio123', 'socio');
+                            ('admin' , 'admin'),
+                            ('socio', 'socio');
                     ";
 
                     SQLiteCommand cmd = new SQLiteCommand(tableCmd, connection);

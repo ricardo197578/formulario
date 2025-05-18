@@ -14,6 +14,7 @@ namespace LoginEjemplo
         {
             InitializeComponent();
             DB.InitializeDatabase(); //inicia DB
+		this.FormClosing += LoginForm_FormClosing;
         }
 
         private void InitializeComponent()
@@ -79,5 +80,10 @@ namespace LoginEjemplo
             Application.EnableVisualStyles();
             Application.Run(new LoginForm());
         }
+//para ver si mata el proceso
+	private void LoginForm_FormClosing(object sender, FormClosingEventArgs e) {
+    Application.Exit(); // Cierra todos los formularios y procesos de la app.
+    Environment.Exit(0); // Termina el proceso inmediatamente (por si acaso).
+}
     }
 }
