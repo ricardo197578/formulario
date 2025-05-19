@@ -49,7 +49,7 @@ namespace LoginEjemplo
             this.Controls.Add(btnLogin);
         }
 
-        private void BtnLogin_Click(object sender, EventArgs e)
+        /*private void BtnLogin_Click(object sender, EventArgs e)
         {
             string username = txtUsername.Text;
             string password = txtPassword.Text;
@@ -71,6 +71,63 @@ namespace LoginEjemplo
             else
             {
                 MessageBox.Show("Credenciales incorrectas", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }*/
+        private void BtnLogin_Click(object sender, EventArgs e)
+        {
+            string username = txtUsername.Text;
+            string password = txtPassword.Text;
+            SQLiteConnection connection = null;
+            SQLiteCommand cmd = null;
+            SQLiteDataReader reader = null;
+
+            try
+            {
+                connection = new SQLiteConnection(DB.ConnectionString);
+                connection.Open();
+
+                string query = "SELECT Tipo FROM Usuarios WHERE NombreUsuario = @user AND Contrasena = @pass";
+                cmd = new SQLiteCommand(query, connection);
+                cmd.Parameters.Add(new SQLiteParameter("@user", username));
+                cmd.Parameters.Add(new SQLiteParameter("@pass", password));
+
+                reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    string tipoUsuario = reader["Tipo"].ToString();
+                    // Reemplazo de interpolación por string.Format:
+                    MessageBox.Show(string.Format("¡Bienvenido, {0}!", tipoUsuario));
+
+                    if (tipoUsuario == "admin")
+                    {
+                        AdminForm adminForm = new AdminForm();
+                        adminForm.Show();
+                        this.Hide();
+                    }
+                    else if (tipoUsuario == "socio")
+                    {
+                        SocioForm socioForm = new SocioForm();
+                        socioForm.Show();
+                        this.Hide();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Credenciales incorrectas", "Error",
+                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error al conectar con la base de datos: {0}", ex.Message),
+                               "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (reader != null) reader.Close();
+                if (cmd != null) cmd.Dispose();
+                if (connection != null) connection.Close();
             }
         }
 
